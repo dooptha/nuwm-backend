@@ -1,6 +1,8 @@
 const request = require('request');
 const queryString = require('querystring');
 
+const Timetable = require('../entities/Timetable');
+
 class ScheduleAPI {
   constructor(config) {
     this.API_ENDPINT = config.SCHEDULE_API_ENDPOINT;
@@ -16,10 +18,14 @@ class ScheduleAPI {
             return reject(new Error(error));
           }
 
-          return resolve(body);
+          return resolve(ScheduleAPI.serialize(body, params));
         }
       );
     })
+  }
+
+  static serialize(body, params) {
+    return new Timetable(JSON.parse(body), params);
   }
 
 }
