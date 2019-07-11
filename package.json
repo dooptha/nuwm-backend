@@ -1,0 +1,29 @@
+{
+  "name": "nuwm-backend",
+  "version": "0.0.1",
+  "description": "Backend API for IOS/Android app",
+  "main": "./src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dooptha/nuwm-backend.git"
+  },
+  "author": "Vladimir Taytor",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dooptha/nuwm-backend/issues"
+  },
+  "homepage": "https://github.com/dooptha/nuwm-backend#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^3.18.0",
+    "query-string": "^6.8.1",
+    "request": "^2.88.0"
+  }
+}
