@@ -8,11 +8,12 @@ const scheduleAPI = new ScheduleAPI(config);
 module.exports = function () {
 
   router.get("/", function (req, res) {
+    const {lecturer, group, startDate, endDate} = req.query;
     const params = {
-      name: req.query.lecturer,
-      group: req.query.group,
-      sdate: req.query.startDate,
-      edate: req.query.endDate,
+      name: lecturer,
+      group: group,
+      sdate: startDate,
+      edate: endDate,
     };
     return scheduleAPI.getScheduleByParams(params)
       .then(body => res.send(body))
