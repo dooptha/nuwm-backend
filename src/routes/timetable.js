@@ -17,7 +17,7 @@ module.exports = function () {
     };
     return scheduleAPI.getScheduleByParams(params)
       .then(body => res.send(body))
-      .catch(err => res.status(500).send({error: err.message}));
+      .catch(err => res.status(err.code || 500).send({error: err.message}));
   });
 
   return router;
