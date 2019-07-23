@@ -6,5 +6,14 @@ module.exports = function () {
     return res.redirect("https://dooptha.com");
   });
 
+  router.get("/ping", function (req, res) {
+    return res.send("pong");
+  });
+
+  router.post("/login", function (req, res) {
+    const token = "token";
+    return res.send({token})
+  });
+
   return router;
 };
