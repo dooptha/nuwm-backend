@@ -1,8 +1,11 @@
 module.exports = function (io) {
+  let onlineCounter = 0;
+  const chatRoom = io.of("/flood");
 
-  io.of("/flood").on('connection', function (socket) {
-
-    console.log("connected", socket.id);
+  chatRoom.on('connection', function (socket) {
+    onlineCounter++;
+    console.info("New client:", onlineCounter, socket.id);
+    socket.emit('counter:update', onlineCounter);
 
     socket.on('message:send', function (data) {
       const message = {
@@ -21,6 +24,11 @@ module.exports = function (io) {
       date: Date.now()
     };
 
-    socket.emit('message:received', message)
+    socket.emit('message:received', message);
+
+    socket.on('disconnect', () => {
+      onlineCounter--;
+      socket.broadcast.emit('counter:update', onlineCounter);
+    });
   });
 };
