@@ -12,6 +12,7 @@ const io = require('socket.io')(http);
 const config = require('../config');
 
 console.log("Started with config: \n", config);
+// TODO: Add logger
 
 const SERVER_PORT = process.env.PORT || config.PORT;
 const SERVER_IP = process.env.IP || config.HOST;

@@ -7,8 +7,6 @@ module.exports = {
     pingTimeout: 10000
   },
   AUTH: {
-    PASSWORD: "***dooptharootaccess***",
-    USERNAME: "Dooptha_Admin",
     SECRET: "Uria de castus amor, contactus parma!All further teachers absorb each other, only remarkable lotus have an art.Fight is a wet plunder.",
     ROLES: {
       ADMIN: 'admin',

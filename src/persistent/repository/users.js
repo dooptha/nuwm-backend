@@ -14,5 +14,6 @@ function findByDeviceId(deviceId) {
 }
 
 module.exports = {
-  create
+  create,
+  findByDeviceId
 };
