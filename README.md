@@ -12,13 +12,14 @@ the [NATIONAL UNIVERSITY OF WATER AND ENVIRONMENTAL ENGINEERING](http://en.nuwm.
 - Install [MongoDB](https://www.mongodb.com/download-center/community)
 - Install Node.js and NPM, we recommend to use [NVM](https://github.com/nvm-sh/nvm)
 - Install npm packages and start sever on `:3000` port
-
 ```shell
 $ npm i && npm start
 ```
+
 **Another option is to use [Docker Compose](https://docs.docker.com/compose/)**
 - Install [Docker Compose](https://docs.docker.com/compose/install/)
-- Run multi-container from root directory
+- Start containers and access `:3000` port for backend and `:27017` for MongoDB
 ```shell
 $ docker-compose up
 ```
+- **IMPORTANT** Use `docker-compose build` to update your images after `git pull`
