@@ -2,7 +2,7 @@ const request = require('request');
 const queryString = require('querystring');
 const {CustomError} = require('../services/ErrorHandler');
 
-const Timetable = require('../entities/Timetable');
+const Timetable = require('./entities/Timetable');
 
 class ScheduleAPI {
   constructor(config) {

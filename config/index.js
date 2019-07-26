@@ -15,5 +15,8 @@ module.exports = {
       USER: 'user',
       MODERATOR: 'moderator'
     }
+  },
+  DATABASE: {
+    URL: "mongodb://localhost:27017/dooptha"
   }
 };

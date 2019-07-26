@@ -1,4 +1,6 @@
 const router = require("express").Router();
+const users = require("../persistent/repository/users");
+const AuthHandler = require("../services/AuthHandler");
 
 module.exports = function () {
 
@@ -11,8 +13,14 @@ module.exports = function () {
   });
 
   router.post("/login", function (req, res) {
-    const token = "token";
-    return res.send({token})
+    const {name, deviceId} = req.body;
+    console.log("body", req.body);
+    if (!name || !deviceId)
+      return res.status(400).send({error: "Not enough data"});
+    return users.create(name, deviceId)
+      .then((user) => AuthHandler.login(user))
+      .then((token) => res.send({token}))
+      .catch(err => res.status(500).send({error: err.message}));
   });
 
   return router;
