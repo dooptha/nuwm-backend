@@ -1,0 +1,19 @@
+version: "2"
+services:
+  app:
+    container_name: Dooptha-NUWM-Backend
+    restart: always
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    command: ["./wait-for-it.sh", "http://localhost:27017", "-t","2", "--", "node", "./src/server.js"]
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - /data/db
+      # - ./data:/data/db in Windows this is not working
+    ports:
+      - "27017:27017"

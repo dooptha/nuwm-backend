@@ -15,6 +15,6 @@ module.exports = {
     }
   },
   DATABASE: {
-    URL: "mongodb://localhost:27017/dooptha"
+    URL: "mongodb://mongo:27017/dooptha"
   }
 };
