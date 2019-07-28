@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const cors = require('cors');
+const AuthHandler = require('./services/AuthHandler');
 
 const app = express();
 const http = require('http').createServer(app);
@@ -28,9 +29,12 @@ app.use(cors());
 const socket = require('./socket')(io);
 const index = require('./routes')();
 const timetable = require('./routes/timetable')();
+const users = require('./routes/users')();
 
 app.use("/", index);
+app.use(AuthHandler.secureRoutes());
 app.use("/timetable", timetable);
+app.use("/users", users);
 
 http.listen(SERVER_PORT, function () {
   console.info(`Dooptha NUWM RESTServer listening on http://${SERVER_IP}:${SERVER_PORT}!`);

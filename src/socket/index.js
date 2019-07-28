@@ -31,4 +31,6 @@ module.exports = function (io) {
       socket.broadcast.emit('counter:update', onlineCounter);
     });
   });
+
+  return io;
 };

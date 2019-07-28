@@ -22,4 +22,6 @@ $ npm i && npm start
 ```shell
 $ docker-compose up
 ```
-- **IMPORTANT** Use `docker-compose build` to update your images after `git pull`
+- **IMPORTANT :** Use `docker-compose build` to update your images after `git pull`
+- **IMPORTANT :** Make sure you are using the right link for MongoDB it should be `mongodb://mongo:27017` 
+[(see config)]()

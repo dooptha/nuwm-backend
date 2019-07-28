@@ -5,7 +5,6 @@ function create(username, deviceId) {
     username,
     deviceId
   });
-  console.log("user", user);
   return user.save().then(user => user);
 }
 
@@ -13,7 +12,12 @@ function findByDeviceId(deviceId) {
   return User.findOne({ deviceId }).exec();
 }
 
+function update(deviceId, data) {
+  return User.findOneAndUpdate({deviceId}, data, {new: true}).exec();
+}
+
 module.exports = {
   create,
-  findByDeviceId
+  findByDeviceId,
+  update
 };

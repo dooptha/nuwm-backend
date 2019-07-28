@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const config = require('../../config').AUTH;
+const ROLES = config.ROLES;
 
 // TODO: use certificate for encoding
 
@@ -38,7 +39,7 @@ function secureRoutes(role = config.ROLES.USER) {
       if (err)
         return res.status(401).send({error: 'Failed to authenticate token.'});
 
-      if (!AuthManager.isAccessGranted(role, decoded.role))
+      if (!isAccessGranted(role, decoded.role))
         return res.status(401).send({error: 'Access denied'});
 
       req.user = decoded;
@@ -49,17 +50,17 @@ function secureRoutes(role = config.ROLES.USER) {
   }
 }
 
-function isAccessGranted(role, providedRole) {
+function isAccessGranted(minRole, providedRole) {
   if (providedRole === config.ROLES.ADMIN)
     return true;
-  if (providedRole === config.ROLES.MODERATOR && role === config.ROLES.MODERATOR)
+  if (providedRole === config.ROLES.MODERATOR && minRole === config.ROLES.MODERATOR)
     return true;
-  if (providedRole === config.ROLES.USER && role === config.ROLES.USER)
+  if (providedRole === config.ROLES.USER && minRole === config.ROLES.USER)
     return true;
 
   return false;
 }
 
 module.exports = {
-  login, secureRoutes, isAccessGranted
+  login, secureRoutes, isAccessGranted, ROLES
 };
