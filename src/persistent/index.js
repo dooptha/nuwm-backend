@@ -3,7 +3,7 @@ const config = require('../../config');
 
 class MongoDB {
   constructor() {
-    this.config = {useNewUrlParser: true};
+    this.config = {useNewUrlParser: true, useFindAndModify: false};
   }
 
   connect() {
