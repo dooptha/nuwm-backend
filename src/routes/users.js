@@ -20,5 +20,12 @@ module.exports = function () {
       .catch(err => res.status(500).send({error: err.message}));
   });
 
+  router.get("/", function (req, res) {
+    const {deviceId} = req.user;
+    return users.findByDeviceId(deviceId)
+      .then(user => res.send({user}))
+      .catch(err => res.status(500).send({error: err.message}));
+  });
+
   return router;
 };
