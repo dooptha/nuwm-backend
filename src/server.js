@@ -30,11 +30,13 @@ const socket = require('./socket')(io);
 const index = require('./routes')();
 const timetable = require('./routes/timetable')();
 const users = require('./routes/users')();
+const polls = require('./routes/polls')();
 
 app.use("/", index);
 app.use(AuthHandler.secureRoutes());
 app.use("/timetable", timetable);
 app.use("/users", users);
+app.use("/polls", polls);
 
 http.listen(SERVER_PORT, function () {
   console.info(`Dooptha NUWM RESTServer listening on http://${SERVER_IP}:${SERVER_PORT}!`);

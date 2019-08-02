@@ -1,23 +1,33 @@
 const Poll = require('../entites/Poll');
 
-function create(username, deviceId) {
-  const user = new Poll({
-    username,
-    deviceId
+function create(question, options) {
+  const poll = new Poll({
+    question,
+    options
   });
-  return user.save().then(user => user);
+  return poll.save().then(poll => poll);
 }
 
-function findByDeviceId(deviceId) {
-  return Poll.findOne({ deviceId }).exec();
+function findById(id) {
+  return Poll.findOne({ id }).exec();
 }
 
-function update(deviceId, data) {
-  return Poll.findOneAndUpdate({deviceId}, data, {new: true}).exec();
+function update(id, data) {
+  return Poll.findOneAndUpdate({id}, data, {new: true}).exec();
+}
+
+function getClosed(page, offset = 10) {
+  return Poll.find({active: false}).limit(offset).skip(page * offset).exec();
+}
+
+function vote(id, optionId) {
+  return Poll.findOneAndUpdate({id, "options.id": optionId}, {$inc: {votes: 1}}).exec();
 }
 
 module.exports = {
   create,
-  findByDeviceId,
-  update
+  findById,
+  getClosed,
+  update,
+  vote
 };
