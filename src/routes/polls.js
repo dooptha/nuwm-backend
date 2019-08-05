@@ -18,8 +18,8 @@ module.exports = function () {
 
   router.get("/", function (req, res) {
     const page = req.query.page || 0;
-    return polls.getClosed(page)
-      .then(poll => res.send({poll}))
+    return polls.getClosedPolls(page)
+      .then(polls => res.send({polls}))
       .catch(err => res.status(500).send({error: err.message}));
   });
 

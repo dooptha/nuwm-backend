@@ -26,7 +26,7 @@ function update(id, data) {
   return Poll.findOneAndUpdate({id}, data, {new: true}).exec();
 }
 
-function getClosed(page, offset = 10) {
+function getClosedPolls(page, offset = 10) {
   return Poll.find({active: false}).limit(offset).skip(page * offset).exec();
 }
 
@@ -37,7 +37,7 @@ function vote(optionId) {
 module.exports = {
   create,
   findById,
-  getClosed,
+  getClosedPolls,
   update,
   vote,
   getActivePoll
