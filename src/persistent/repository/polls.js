@@ -5,7 +5,17 @@ function create(question, options) {
     question,
     options
   });
-  return poll.save().then(poll => poll);
+  return closeLastPoll()
+    .then(() => poll.save())
+    .then(poll => poll);
+}
+
+function getActivePoll() {
+  return Poll.findOne({ active: true }).exec();
+}
+
+function closeLastPoll() {
+  return Poll.findOneAndUpdate({active: true}, {active: false, closedAt: Date.now()}).exec()
 }
 
 function findById(id) {
@@ -29,5 +39,6 @@ module.exports = {
   findById,
   getClosed,
   update,
-  vote
+  vote,
+  getActivePoll
 };

@@ -10,9 +10,8 @@ module.exports = function () {
       .catch(err => res.status(500).send({error: err.message}));
   });
 
-  router.get("/:id", function (req, res) {
-    const id = req.params.id;
-    return polls.findById(id)
+  router.get("/active", function (req, res) {
+    return polls.getActivePoll()
       .then(poll => res.send({poll}))
       .catch(err => res.status(500).send({error: err.message}));
   });
