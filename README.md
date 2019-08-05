@@ -9,7 +9,9 @@ the [NATIONAL UNIVERSITY OF WATER AND ENVIRONMENTAL ENGINEERING](http://en.nuwm.
  * MongoDB _(v4.0.10-release)_
 
 ## Documentation
-Available API routes is *[here](https://documenter.getpostman.com/view/2781524/SVYkvLWY?version=latest).*
+**List of available API endpoints is [here](https://documenter.getpostman.com/view/2781524/SVYkvLWY?version=latest).**
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/2781524/SVYkvLWY?version=latest)
 
 ## Build
 **First option is to build the project from source files**

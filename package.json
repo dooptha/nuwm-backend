@@ -5,7 +5,8 @@
   "main": "./src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./src/server.js"
+    "start": "npx nodemon ./src/server.js --config nodemon.config.json",
+    "prod": "PORT=5000 pm2 start ./src/server.js --name 'NUWM Backend API'"
   },
   "repository": {
     "type": "git",
@@ -29,5 +30,8 @@
     "query-string": "^6.8.1",
     "request": "^2.88.0",
     "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
   }
 }
