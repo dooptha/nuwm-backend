@@ -8,6 +8,9 @@ the [NATIONAL UNIVERSITY OF WATER AND ENVIRONMENTAL ENGINEERING](http://en.nuwm.
  * Node.js _(v11.14.0)_ and NPM _(v6.7.0)_
  * MongoDB _(v4.0.10-release)_
 
+## Documentation
+Available API routes is *[here](https://documenter.getpostman.com/view/2781524/SVYkvLWY?version=latest).*
+
 ## Build
 **First option is to build the project from source files**
 - Clone repository `git clone https://github.com/dooptha/nuwm-backend.git`

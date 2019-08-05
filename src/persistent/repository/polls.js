@@ -11,15 +11,22 @@ function create(question, options) {
 }
 
 function getActivePoll() {
-  return Poll.findOne({ active: true }).exec();
+  return Poll.findOne({active: true}).exec();
 }
 
 function closeLastPoll() {
-  return Poll.findOneAndUpdate({active: true}, {active: false, closedAt: Date.now()}).exec()
+  return Poll.findOneAndUpdate(
+    {
+      active: true
+    }, {
+      active: false,
+      closedAt: Date.now()
+    })
+    .exec()
 }
 
 function findById(id) {
-  return Poll.findOne({ id }).exec();
+  return Poll.findOne({id}).exec();
 }
 
 function update(id, data) {
@@ -31,7 +38,17 @@ function getClosedPolls(page, offset = 10) {
 }
 
 function vote(optionId) {
-  return Poll.findOneAndUpdate({"options.id": optionId}, {$inc: {votes: 1, 'options.$.votes': 1}}, {new: true}).exec();
+  return Poll.findOneAndUpdate({
+    "options.id": optionId
+  }, {
+    $inc: {
+      votes: 1,
+      'options.$.votes': 1
+    }
+  }, {
+    new: true
+  })
+    .exec();
 }
 
 module.exports = {
