@@ -19,8 +19,9 @@ module.exports = function () {
       return res.status(400).send({error: "Not enough data"});
     return users.findByDeviceId(deviceId)
       .then(user => user === null ? users.create(username, deviceId) : user)
-      .then((user) => AuthHandler.login(user))
-      .then((token) => res.send({token}))
+      .then((user) => AuthHandler.login(user)
+        .then((token) => res.send({user, token}))
+      )
       .catch(err => res.status(500).send({error: err.message}));
   });
 

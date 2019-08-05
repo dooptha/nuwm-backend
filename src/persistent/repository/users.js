@@ -9,7 +9,7 @@ function create(username, deviceId) {
 }
 
 function findByDeviceId(deviceId) {
-  return User.findOne({ deviceId }).exec();
+  return User.findOne({ deviceId }, {_id: 0, deviceId: 0}).exec();
 }
 
 function update(deviceId, data) {

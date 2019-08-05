@@ -20,8 +20,8 @@ function getClosed(page, offset = 10) {
   return Poll.find({active: false}).limit(offset).skip(page * offset).exec();
 }
 
-function vote(id, optionId) {
-  return Poll.findOneAndUpdate({id, "options.id": optionId}, {$inc: {votes: 1}}).exec();
+function vote(optionId) {
+  return Poll.findOneAndUpdate({"options.id": optionId}, {$inc: {votes: 1, 'options.$.votes': 1}}, {new: true}).exec();
 }
 
 module.exports = {
