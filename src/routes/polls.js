@@ -6,13 +6,15 @@ module.exports = function () {
 
   router.post("/:optionId", function (req, res) {
     const optionId = req.params.optionId;
-    return polls.vote(optionId).then(poll => res.send({poll}))
+    const {deviceId} = req.user;
+    return polls.vote(optionId, deviceId).then(poll => res.send({poll}))
       .catch(err => res.status(500).send({error: err.message}));
   });
 
   router.get("/active", function (req, res) {
-    return polls.getActivePoll()
-      .then(poll => res.send({poll}))
+    const {deviceId} = req.user;
+    return polls.getActivePoll(deviceId)
+      .then(result => res.send({poll: result.length ? result[0] : null}))
       .catch(err => res.status(500).send({error: err.message}));
   });
 

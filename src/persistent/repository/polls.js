@@ -10,17 +10,34 @@ function create(question, options) {
     .then(poll => poll);
 }
 
-function getActivePoll() {
-  return Poll.findOne({active: true}).exec();
+function getActivePoll(deviceId) {
+  return Poll.aggregate([
+      {$match: {active: true, closedAt: null}},
+      {
+        $addFields: {
+          "voted": {
+            $in: [deviceId, {
+              $reduce: {
+                input: "$options.voters",
+                initialValue: [],
+                in: {$concatArrays: ["$$value", "$$this"]}
+              }
+            }]
+          },
+        }
+      }
+    ]
+  )
+    .exec();
 }
 
 function closeLastPoll() {
   return Poll.findOneAndUpdate({
-      active: true
-    }, {
-      active: false,
-      closedAt: Date.now()
-    })
+    active: true
+  }, {
+    active: false,
+    closedAt: Date.now()
+  })
     .exec()
 }
 
@@ -36,10 +53,14 @@ function getClosedPolls(page, offset = 10) {
   return Poll.find({active: false}).limit(offset).skip(page * offset).exec();
 }
 
-function vote(optionId) {
+function vote(optionId, deviceId) {
   return Poll.findOneAndUpdate({
-    "options.id": optionId
+    "options.id": optionId,
+    "options.voters": {$ne: deviceId}
   }, {
+    $push: {
+      'options.$.voters': deviceId
+    },
     $inc: {
       votes: 1,
       'options.$.votes': 1

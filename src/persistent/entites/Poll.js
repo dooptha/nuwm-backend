@@ -4,7 +4,8 @@ const nanoid = require("nanoid");
 const optionSchema = new mongoose.Schema({
   id: {type: String, default: () => nanoid()},
   value: String,
-  votes: {type: Number, default: 0}
+  votes: {type: Number, default: 0},
+  voters: {type: Array, default: []}
 });
 
 const pollSchema = new mongoose.Schema({

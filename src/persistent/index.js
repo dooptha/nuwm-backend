@@ -8,6 +8,7 @@ class MongoDB {
 
   connect() {
     mongoose.connect(config.DATABASE.URL, this.config);
+    mongoose.set('debug', true);
     return mongoose;
   }
 }

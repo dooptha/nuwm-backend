@@ -38,6 +38,11 @@ app.use("/timetable", timetable);
 app.use("/users", users);
 app.use("/polls", polls);
 
+app.use(function(err, req, res, next) {
+  console.error(err.stack);
+  return res.status(500).send({error: `Internal Error: ${err.message}`});
+});
+
 http.listen(SERVER_PORT, function () {
   console.info(`Dooptha NUWM RESTServer listening on http://${SERVER_IP}:${SERVER_PORT}!`);
 });
