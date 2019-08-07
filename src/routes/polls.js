@@ -41,7 +41,7 @@ module.exports = function (io) {
       .catch(err => res.status(500).send({error: err.message}));
   });
 
-  router.post("/close/active", function (req, res) {
+  router.post("/active/close", function (req, res) {
     return polls.closeLastPoll()
       .then(_ => res.status(200).end())
       .catch(err => res.status(500).send({error: err.message}));
