@@ -1,3 +1,6 @@
+const History = require('../services/HistoryQueue');
+const messages = new History(50);
+
 module.exports = function (io) {
   let onlineCounter = 0;
   const chatRoom = io.of("/flood");
@@ -6,6 +9,7 @@ module.exports = function (io) {
     onlineCounter++;
     console.info("New client:", onlineCounter, socket.id);
     socket.emit('counter:update', onlineCounter);
+    socket.emit('messages:history', messages.get());
 
     socket.on('message:send', function (data) {
       const message = {
@@ -13,18 +17,9 @@ module.exports = function (io) {
         sender: data.sender,
         date: Date.now()
       };
-      console.log(data);
+      messages.push(message);
       socket.broadcast.emit('message:received', message)
     });
-
-
-    const message = {
-      body: "test message",
-      sender: false,
-      date: Date.now()
-    };
-
-    socket.emit('message:received', message);
 
     socket.on('disconnect', () => {
       onlineCounter--;

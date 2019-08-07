@@ -2,12 +2,16 @@ const router = require("express").Router();
 const polls = require("../persistent/repository/polls");
 const AuthHandler = require("../services/AuthHandler");
 
-module.exports = function () {
+module.exports = function (io) {
 
   router.post("/:optionId", function (req, res) {
     const optionId = req.params.optionId;
     const {deviceId} = req.user;
-    return polls.vote(optionId, deviceId).then(poll => res.send({poll}))
+    return polls.vote(optionId, deviceId)
+      .then(poll => {
+        io.of("/flood").emit('poll:updated', poll);
+        return res.send({poll});
+      })
       .catch(err => res.status(500).send({error: err.message}));
   });
 
@@ -30,7 +34,10 @@ module.exports = function () {
   router.post("/", function (req, res) {
     const {question, options} = req.body;
     return polls.create(question, options)
-      .then(poll => res.send({poll}))
+      .then(poll => {
+        io.of("/flood").emit('poll:created', poll);
+        return res.send({poll});
+      })
       .catch(err => res.status(500).send({error: err.message}));
   });
 

@@ -26,11 +26,11 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(cors());
 
-const socket = require('./socket')(io);
+const sockets = require('./socket')(io);
 const index = require('./routes')();
 const timetable = require('./routes/timetable')();
 const users = require('./routes/users')();
-const polls = require('./routes/polls')();
+const polls = require('./routes/polls')(sockets);
 
 app.use("/", index);
 app.use(AuthHandler.secureRoutes());
