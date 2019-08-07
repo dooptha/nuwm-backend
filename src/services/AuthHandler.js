@@ -3,24 +3,20 @@ const jwt = require('jsonwebtoken');
 const config = require('../../config').AUTH;
 const ROLES = config.ROLES;
 
-// TODO: use certificate for encoding
-
-function login(user) {
+// TODO: use certificate for encoding in production mode
+function login(deviceId, role) {
   return new Promise((resolve, reject) => {
-    if (user)
-      return jwt.sign({
-          role: user.role,
-          username: user.username,
-          deviceId: user.deviceId,
-          id: user.id
-        }, config.SECRET, function (err, token) {
-          if (err)
-            return reject(new Error("Invalid token"));
-          return resolve(token);
-        }
-      );
+    if (!deviceId || !role)
+      return reject(new Error("Password or Username is incorrect"));
 
-    return reject(new Error("Password or Username is incorrect"))
+    return jwt.sign({
+        role, deviceId
+      }, config.SECRET, function (err, token) {
+        if (err)
+          return reject(new Error("Invalid token"));
+        return resolve(token);
+      }
+    );
   });
 }
 

@@ -14,14 +14,20 @@ module.exports = function () {
 
   router.post("/login", function (req, res) {
     const {username, deviceId} = req.body;
-    console.log("Login Body:", req.body);
     if (!username || !deviceId)
       return res.status(400).send({error: "Not enough data"});
+
     return users.findByDeviceId(deviceId)
       .then(user => user === null ? users.create(username, deviceId) : user)
-      .then((user) => AuthHandler.login(user)
-        .then((token) => res.send({user, token}))
+      .then(user =>
+        AuthHandler.login(user.deviceId, user.role)
+          .then(token => ({user, token}))
       )
+      .then(response => {
+        response.user['__v'] = undefined;
+        response.user.deviceId = undefined;
+        return res.send(response);
+      })
       .catch(err => res.status(500).send({error: err.message}));
   });
 

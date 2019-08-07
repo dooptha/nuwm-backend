@@ -9,15 +9,12 @@ function create(username, deviceId) {
 }
 
 function findByDeviceId(deviceId) {
-  return User.findOne({ deviceId }, {_id: 0, deviceId: 0}).exec();
+  const options = {_id: 0, deviceId: 0};
+  return User.findOne({deviceId}).exec();
 }
 
 function update(deviceId, data) {
   return User.findOneAndUpdate({deviceId}, data, {new: true}).exec();
 }
 
-module.exports = {
-  create,
-  findByDeviceId,
-  update
-};
+module.exports = {create, findByDeviceId, update};

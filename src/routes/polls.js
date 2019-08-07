@@ -32,5 +32,11 @@ module.exports = function () {
       .catch(err => res.status(500).send({error: err.message}));
   });
 
+  router.post("/close/active", function (req, res) {
+    return polls.closeLastPoll()
+      .then(_ => res.status(200).end())
+      .catch(err => res.status(500).send({error: err.message}));
+  });
+
   return router;
 };

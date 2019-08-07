@@ -15,8 +15,7 @@ function getActivePoll() {
 }
 
 function closeLastPoll() {
-  return Poll.findOneAndUpdate(
-    {
+  return Poll.findOneAndUpdate({
       active: true
     }, {
       active: false,
@@ -53,6 +52,7 @@ function vote(optionId) {
 
 module.exports = {
   create,
+  closeLastPoll,
   findById,
   getClosedPolls,
   update,

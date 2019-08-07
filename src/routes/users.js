@@ -23,7 +23,11 @@ module.exports = function () {
   router.get("/", function (req, res) {
     const {deviceId} = req.user;
     return users.findByDeviceId(deviceId)
-      .then(user => res.send({user}))
+      .then(user => {
+        user.deviceId = undefined;
+        user["__v"] = undefined;
+        return res.send({user});
+      })
       .catch(err => res.status(500).send({error: err.message}));
   });
 
