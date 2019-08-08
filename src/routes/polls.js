@@ -9,6 +9,8 @@ module.exports = function (io) {
     const {deviceId} = req.user;
     return polls.vote(optionId, deviceId)
       .then(poll => {
+        if(!poll)
+          return res.status(400).send({error: "Something goes wrong:("});
         io.of("/flood").emit('poll:updated', poll);
         return res.send({poll});
       })
