@@ -20,6 +20,10 @@ module.exports = function () {
       .catch(err => res.status(err.code || 500).send({error: err.message}));
   });
 
+  router.get("/test",function (req, res) {
+    return res.send(ScheduleAPI.getMockResponse());
+  });
+
   router.get("/groups", function (req, res) {
     return scheduleAPI.getGroupsList()
       .then(groups => res.send({groups}));
