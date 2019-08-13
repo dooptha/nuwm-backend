@@ -43,14 +43,18 @@ app.use(function(err, req, res, next) {
   return res.status(500).send({error: `Internal Error: ${err.message}`});
 });
 
-http.listen(SERVER_PORT, function () {
+const server = http.listen(SERVER_PORT, function () {
   console.info(`Dooptha NUWM RESTServer listening on http://${SERVER_IP}:${SERVER_PORT}!`);
 });
 
-process.on('uncaughtException', function(error) {
-  console.error(error);
-});
+if(process.env.NODE_ENV === "production") {
+  process.on('uncaughtException', function(error) {
+    console.error(error);
+  });
 
-process.on('unhandledRejection', function(reason, p) {
-  console.error(reason, p);
-});
+  process.on('unhandledRejection', function(reason, p) {
+    console.error(reason, p);
+  });
+}
+
+module.exports = server;
