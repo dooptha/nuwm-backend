@@ -6,6 +6,7 @@
   "scripts": {
     "test": "npx mocha ./tests --recursive",
     "start": "npx nodemon ./src/server.js --config nodemon.config.json",
+    "heroku": "NODE_ENV=production node ./src/server.js",
     "prod": "PORT=5000 pm2 start ./src/server.js --name 'NUWM Backend API'"
   },
   "repository": {
