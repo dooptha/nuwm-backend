@@ -7,7 +7,7 @@ class MongoDB {
   }
 
   connect() {
-    mongoose.connect(config.DATABASE.URL, this.config);
+    mongoose.connect(process.env.DATABASE_URL || config.DATABASE.URL, this.config);
     mongoose.set('debug', true);
     return mongoose;
   }

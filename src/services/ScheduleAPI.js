@@ -57,7 +57,6 @@ class ScheduleAPI {
   }
 
   getLecturersList() {
-    const options = {encoding: null, method: "GET"};
     return new Promise((resolve, reject) => {
       return request(
         "http://desk.nuwm.edu.ua/cgi-bin/timetable.cgi?n=701&lev=141&faculty=0",
