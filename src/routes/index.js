@@ -1,11 +1,15 @@
 const router = require("express").Router();
 const users = require("../persistent/repository/users");
 const AuthHandler = require("../services/AuthHandler");
+const {version} = require('../../package.json');
 
 module.exports = function () {
 
   router.get("/", function (req, res) {
-    return res.redirect("https://dooptha.com");
+    return res.send(
+      `<h1 style="margin-top: 150px; width: 100%; text-align: center;">
+          <a href="https://dooptha.com">Dooptha</a> NUWM API v${version}
+       </h1>`);
   });
 
   router.get("/ping", function (req, res) {
