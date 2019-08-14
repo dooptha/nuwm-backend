@@ -33,8 +33,8 @@ const users = require('./routes/users')();
 const polls = require('./routes/polls')(sockets);
 
 app.use("/", index);
-app.use(AuthHandler.secureRoutes());
 app.use("/timetable", timetable);
+app.use(AuthHandler.secureRoutes());
 app.use("/users", users);
 app.use("/polls", polls);
 
