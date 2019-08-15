@@ -6,8 +6,7 @@ const config = require('../../config');
 
 const scheduleAPI = new ScheduleAPI(config);
 
-module.exports = function () {
-
+const timetableRoute = function () {
   router.get("/",
     memoryCacheMiddleware(60 * 5),
     function (req, res) {
@@ -47,3 +46,5 @@ module.exports = function () {
 
   return router;
 };
+
+module.exports = timetableRoute;

@@ -2,8 +2,7 @@ const router = require("express").Router();
 const users = require("../persistent/repository/users");
 const AuthHandler = require("../services/AuthHandler");
 
-module.exports = function () {
-
+const usersRoute = function () {
   router.get("/access", function (req, res) {
     const {role} = req.user;
     return AuthHandler.isAccessGranted(AuthHandler.ROLES.MODERATOR, role) ?
@@ -33,3 +32,5 @@ module.exports = function () {
 
   return router;
 };
+
+module.exports = usersRoute;

@@ -2,8 +2,7 @@ const router = require("express").Router();
 const polls = require("../persistent/repository/polls");
 const AuthHandler = require("../services/AuthHandler");
 
-module.exports = function (io) {
-
+const pollsRoute = function (io) {
   router.post("/:optionId", function (req, res) {
     const optionId = req.params.optionId;
     const {deviceId} = req.user;
@@ -51,3 +50,5 @@ module.exports = function (io) {
 
   return router;
 };
+
+module.exports = pollsRoute;

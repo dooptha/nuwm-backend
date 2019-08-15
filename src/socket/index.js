@@ -8,7 +8,7 @@ module.exports = function (io) {
   chatRoom.on('connection', function (socket) {
     onlineCounter++;
     console.info("New client:", onlineCounter, socket.id);
-    socket.emit('counter:update', onlineCounter);
+    chatRoom.emit('counter:update', onlineCounter);
     socket.emit('messages:history', messages.get());
 
     socket.on('message:send', function (data) {

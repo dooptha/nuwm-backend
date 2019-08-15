@@ -3,8 +3,7 @@ const users = require("../persistent/repository/users");
 const AuthHandler = require("../services/AuthHandler");
 const {version} = require('../../package.json');
 
-module.exports = function () {
-
+const indexRoute = function () {
   router.get("/", function (req, res) {
     return res.send(
       `<h1 style="margin-top: 150px; width: 100%; text-align: center;">
@@ -37,3 +36,5 @@ module.exports = function () {
 
   return router;
 };
+
+module.exports = indexRoute;

@@ -2,6 +2,7 @@
 **NUWM Backend** is server side for [React Native Application](https://github.com/dooptha/nuwm-frontend), which displays lectures timetable for students of
 the [NATIONAL UNIVERSITY OF WATER AND ENVIRONMENTAL ENGINEERING](http://en.nuwm.edu.ua/).
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/ae3ac6dcd2910b452d67/maintainability)](https://codeclimate.com/github/dooptha/nuwm-backend/maintainability)
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
 ## Dependencies
