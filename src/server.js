@@ -31,12 +31,15 @@ const index = require('./routes')();
 const timetable = require('./routes/timetable')();
 const users = require('./routes/users')();
 const polls = require('./routes/polls')(sockets);
+const admin = require('./routes/admin')();
 
 app.use("/", index);
 app.use("/timetable", timetable);
 app.use(AuthHandler.secureRoutes());
 app.use("/users", users);
 app.use("/polls", polls);
+app.use(AuthHandler.secureRoutes(AuthHandler.ROLES.ADMIN));
+app.use("/admin", admin);
 
 app.use(function(err, req, res, next) {
   console.error(err.stack);

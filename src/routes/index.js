@@ -22,9 +22,8 @@ const indexRoute = function () {
 
     return users.findByDeviceId(deviceId)
       .then(user => user === null ? users.create(username, deviceId) : user)
-      .then(user =>
-        AuthHandler.login(user.deviceId, user.role)
-          .then(token => ({user, token}))
+      .then(user => AuthHandler.login(user.deviceId, user.role)
+        .then(token => ({user, token}))
       )
       .then(response => {
         response.user['__v'] = undefined;

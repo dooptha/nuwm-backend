@@ -6,13 +6,12 @@ const pollsRoute = function (io) {
   router.post("/:optionId", function (req, res) {
     const optionId = req.params.optionId;
     const {deviceId} = req.user;
-    return polls.vote(optionId, deviceId)
-      .then(poll => {
-        if(!poll)
-          return res.status(400).send({error: "Something goes wrong:("});
-        io.of("/flood").emit('poll:updated', poll);
-        return res.send({poll});
-      })
+    return polls.vote(optionId, deviceId).then(poll => {
+      if (!poll)
+        return res.status(400).send({error: "Something goes wrong:("});
+      io.of("/flood").emit('poll:updated', poll);
+      return res.send({poll});
+    })
       .catch(err => res.status(500).send({error: err.message}));
   });
 

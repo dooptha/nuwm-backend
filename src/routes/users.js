@@ -9,8 +9,7 @@ const usersRoute = function () {
       res.status(200).end() :
       res.status(403).end();
   });
-
-  // TODO: Create validation
+  // TODO: Add validation
   router.post("/", function (req, res) {
     const data = req.body;
     const {deviceId} = req.user;

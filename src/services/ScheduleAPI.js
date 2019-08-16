@@ -33,9 +33,9 @@ const mockData = {
   },
     {
       date: '06.09.2018',
-      dayName: 'Середа',
-      day: 2,
-      dayOfYear: 248,
+      dayName: 'Четверг',
+      day: 3,
+      dayOfYear: 249,
       subjects: [{
         classroom: '441',
         group: 'ПМ-41, ІНФ-41',
@@ -91,9 +91,8 @@ class ScheduleAPI {
 
   getGroupsList() {
     return new Promise((resolve, reject) => {
-      return request(
-        "http://desk.nuwm.edu.ua/cgi-bin/timetable.cgi?n=701&lev=142",
-        this.GET_REQUEST_OPTIONS,
+      const GROUPS_LINK = "http://desk.nuwm.edu.ua/cgi-bin/timetable.cgi?n=701&lev=142";
+      return request(GROUPS_LINK, this.GET_REQUEST_OPTIONS,
         function (error, response, body) {
           if (error) return reject(new CustomError(error, 400));
           const responseBody = JSON.parse(iconv.decode(body, "windows-1251"));
@@ -101,7 +100,6 @@ class ScheduleAPI {
             return reject(new CustomError(responseBody.error, 404));
           if (responseBody.response === null)
             return reject(new CustomError("Empty response from NUWM API", 400));
-          console.log(responseBody);
           return resolve(responseBody.suggestions);
         }
       );
@@ -110,9 +108,8 @@ class ScheduleAPI {
 
   getLecturersList() {
     return new Promise((resolve, reject) => {
-      return request(
-        "http://desk.nuwm.edu.ua/cgi-bin/timetable.cgi?n=701&lev=141&faculty=0",
-        this.GET_REQUEST_OPTIONS,
+      const LECTURERS_LINK = "http://desk.nuwm.edu.ua/cgi-bin/timetable.cgi?n=701&lev=141&faculty=0";
+      return request(LECTURERS_LINK, this.GET_REQUEST_OPTIONS,
         function (error, response, body) {
           if (error) return reject(new CustomError(error, 400));
           const responseBody = JSON.parse(iconv.decode(body, "windows-1251"));
@@ -120,7 +117,6 @@ class ScheduleAPI {
             return reject(new CustomError(responseBody.error, 404));
           if (responseBody.response === null)
             return reject(new CustomError("Empty response from NUWM API", 400));
-          console.log(responseBody);
           return resolve(responseBody.suggestions);
         }
       );

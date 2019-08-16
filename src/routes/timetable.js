@@ -1,14 +1,15 @@
 const router = require("express").Router();
-
 const ScheduleAPI = require('../services/ScheduleAPI');
-const {memoryCacheMiddleware, clientCacheMiddleware} = require("../services/middlewares");
 const config = require('../../config');
+const {
+  memoryCacheMiddleware,
+  clientCacheMiddleware
+} = require("../services/middlewares");
 
 const scheduleAPI = new ScheduleAPI(config);
 
 const timetableRoute = function () {
-  router.get("/",
-    memoryCacheMiddleware(60 * 5),
+  router.get("/", memoryCacheMiddleware(60 * 5),
     function (req, res) {
       const {lecturer, group, startDate, endDate} = req.query;
       const params = {
@@ -26,18 +27,16 @@ const timetableRoute = function () {
     return res.send(ScheduleAPI.getMockResponse());
   });
 
-  router.get("/groups",
-    clientCacheMiddleware(),
-    memoryCacheMiddleware(60 * 60),
+  router.get("/groups", clientCacheMiddleware(),
+    memoryCacheMiddleware(60 * 60 * 24 * 7),
     function (req, res) {
       return scheduleAPI.getGroupsList()
         .then(groups => res.send({groups}))
         .catch(err => res.status(500).send({error: err.message}));
     });
 
-  router.get("/lecturers",
-    clientCacheMiddleware(),
-    memoryCacheMiddleware(60 * 60),
+  router.get("/lecturers", clientCacheMiddleware(),
+    memoryCacheMiddleware(60 * 60 * 24 * 5),
     function (req, res) {
       return scheduleAPI.getLecturersList()
         .then(lecturers => res.send({lecturers}))
