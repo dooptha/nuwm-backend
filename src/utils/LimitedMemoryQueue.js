@@ -1,10 +1,10 @@
 /**
  * Simple im-memory history storage with limited size
  */
-class HistoryQueue {
-  constructor(length, defaultValue = []) {
+class LimitedMemoryQueue {
+  constructor(length = 10) {
     this.length = length;
-    this.queue = defaultValue;
+    this.queue = [];
   }
 
   get(index = null) {
@@ -24,6 +24,10 @@ class HistoryQueue {
     return this.queue.length;
   }
 
+  delete(value) {
+    const index = this.queue.indexOf(value);
+    return this.queue.splice(index, 1);
+  }
 }
 
-module.exports = HistoryQueue;
+module.exports = LimitedMemoryQueue;

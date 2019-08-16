@@ -1,5 +1,4 @@
-const History = require('../services/HistoryQueue');
-const messages = new History(50);
+const messages = require('../services/MessagesHistory');
 
 module.exports = function (io) {
   let onlineCounter = 0;
