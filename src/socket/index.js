@@ -19,7 +19,7 @@ module.exports = function (io) {
         date: Date.now()
       };
       messages.push(message.id, message);
-      socket.broadcast.emit('message:received', message)
+      chatRoom.emit('message:received', message)
     });
 
     socket.on('disconnect', () => {
