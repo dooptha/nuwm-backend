@@ -11,7 +11,7 @@ class LimitedMemoryQueue {
     if(key)
       return this.queue.get(key);
     else
-      return Array.from(this.queue.entries());
+      return Array.from(this.queue.values());
   }
 
   push(key, value) {
