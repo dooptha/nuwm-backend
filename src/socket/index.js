@@ -1,4 +1,5 @@
 const messages = require('../services/MessagesHistory');
+const nanoid = require('nanoid');
 
 module.exports = function (io) {
   let onlineCounter = 0;
@@ -12,11 +13,12 @@ module.exports = function (io) {
 
     socket.on('message:send', function (data) {
       const message = {
+        id: nanoid(),
         body: data.body,
         sender: data.sender,
         date: Date.now()
       };
-      messages.push(message);
+      messages.push(message.id, message);
       socket.broadcast.emit('message:received', message)
     });
 

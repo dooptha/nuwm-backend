@@ -7,7 +7,7 @@ const adminRoute = function () {
 
   router.post("/messages/delete", function (req, res) {
     const {message} = req.body;
-    messages.delete(message);
+    messages.delete(message.id, message);
     return res.status(200).end();
   });
 

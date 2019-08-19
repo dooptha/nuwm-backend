@@ -4,29 +4,29 @@
 class LimitedMemoryQueue {
   constructor(length = 10) {
     this.length = length;
-    this.queue = [];
+    this.queue = new Map();
   }
 
-  get(index = null) {
-    if(index)
-      return this.queue[index];
+  get(key = null) {
+    if(key)
+      return this.queue.get(key);
     else
-      return this.queue;
+      return Array.from(this.queue.entries());
   }
 
-  push(value) {
-    if(this.queue.length === this.length) {
-      this.queue.shift();
-      this.queue.push(value);
+  push(key, value) {
+    if(this.queue.size === this.length) {
+      const firstKey = this.queue.keys().next().value;
+      this.queue.delete(firstKey);
+      this.queue.set(key, value);
     } else {
-      this.queue.push(value);
+      this.queue.set(key, value);
     }
-    return this.queue.length;
+    return this.queue.size;
   }
 
-  delete(value) {
-    const index = this.queue.indexOf(value);
-    return this.queue.splice(index, 1);
+  delete(key) {
+    return this.queue.delete(key);
   }
 }
 
