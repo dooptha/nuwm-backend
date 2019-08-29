@@ -12,6 +12,6 @@ module.exports.CustomError = class CustomError extends Error {
     super(message);
     this.code = responseCode || 500;
     // logger/metrics goes here
-    console.error(message);
+    console.error("CustomError:", message);
   }
 };

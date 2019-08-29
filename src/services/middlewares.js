@@ -13,8 +13,9 @@ const memoryCacheMiddleware = (seconds, contentType = "application/json") => {
     res.sendResponse = res.send;
 
     res.send = (body) => {
-      cache.put(key, body, seconds * 1000);
-      res.sendResponse(body)
+      if(res.statusCode === 200)
+        cache.put(key, body, seconds * 1000);
+      return res.sendResponse(body)
     };
 
     return next();
