@@ -124,6 +124,8 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
+data
+
 ### Windows template
 # Windows thumbnail cache files
 Thumbs.db
