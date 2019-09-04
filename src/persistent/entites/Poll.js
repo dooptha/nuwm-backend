@@ -15,7 +15,7 @@ const pollSchema = new mongoose.Schema({
   options: [optionSchema],
   votes: {type: Number, default: 0},
   closedAt: {type: Date, default: null},
-  createdAt: {type: Date, default: Date.now()}
+  createdAt: {type: Date, default: () => Date.now()}
 });
 
 const Poll = mongoose.model('Poll', pollSchema);
