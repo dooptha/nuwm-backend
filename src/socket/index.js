@@ -1,5 +1,7 @@
-const messages = require('../services/MessagesHistory');
 const nanoid = require('nanoid');
+const MessagesHistory = require('../services/MessagesHistory');
+
+const history = new MessagesHistory();
 
 module.exports = function (io) {
   let onlineCounter = 0;
@@ -9,7 +11,9 @@ module.exports = function (io) {
     onlineCounter++;
     console.info("New client:", onlineCounter, socket.id);
     chatRoom.emit('counter:update', onlineCounter);
-    socket.emit('messages:history', messages.get());
+
+    MessagesHistory.getLastMessages()
+      .then(messages => socket.emit('messages:history', messages));
 
     socket.on('message:send', function (data) {
       const message = {
@@ -18,7 +22,7 @@ module.exports = function (io) {
         sender: data.sender,
         date: Date.now()
       };
-      messages.push(message.id, message);
+      history.emit('save', message);
       chatRoom.emit('message:received', message)
     });
 
