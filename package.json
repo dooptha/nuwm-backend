@@ -1,6 +1,6 @@
 {
   "name": "nuwm-backend",
-  "version": "0.0.1",
+  "version": "1.1.0",
   "description": "Backend API for IOS/Android app",
   "main": "./src/server.js",
   "scripts": {
