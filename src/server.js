@@ -31,7 +31,7 @@ const index = require('./routes')();
 const timetable = require('./routes/timetable')();
 const users = require('./routes/users')();
 const polls = require('./routes/polls')(sockets);
-const admin = require('./routes/admin')();
+const admin = require('./routes/admin')(sockets);
 
 app.use("/", index);
 app.use("/timetable", timetable);

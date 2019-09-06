@@ -1,18 +1,20 @@
 const router = require("express").Router();
-const users = require("../persistent/repository/users");
-const AuthHandler = require("../services/AuthHandler");
-const messages = require("../services/MessagesHistory");
+const MessagesHistory = require('../services/MessagesHistory');
 
-const adminRoute = function () {
+const adminRoute = function (io) {
 
   router.post("/messages/delete", function (req, res) {
     const {message} = req.body;
-    messages.delete(message.id, message);
-    return res.status(200).end();
+    return MessagesHistory.removeAll()
+      .then(() => io.of("/flood").emit('messages:removed'))
+      .then(() => res.status(200).end())
+      .catch(err => res.status(500).send({error: err.message}));
   });
 
   router.get("/messages", function (req, res) {
-    return res.status(200).send({messages: messages.get()})
+    return MessagesHistory.getLastMessages()
+      .then(messages => res.status(200).send({messages}))
+      .catch(err => res.status(500).send({error: err.message}));
   });
 
   return router;

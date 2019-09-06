@@ -72,14 +72,18 @@ class ScheduleAPI {
         `${this.API_ENDPINT}?${queryString.stringify(params)}`,
         function (error, response, body) {
           if (error) return reject(new CustomError(error, 400));
-          const responseBody = JSON.parse(body);
+          // Another promise to cover JSON.parse async error throw
+          return Promise.resolve(body)
+            .then(JSON.parse)
+            .then((responseBody) => {
+              if (responseBody.code === 33 || response.error)
+                return reject(new CustomError(responseBody.error, 404));
+              if (responseBody.response === null)
+                return reject(new CustomError("Empty response from NUWM API", 400));
 
-          if (responseBody.code === 33 || response.error)
-            return reject(new CustomError(responseBody.error, 404));
-          if (responseBody.response === null)
-            return reject(new CustomError("Empty response from NUWM API", 400));
-
-          return resolve(ScheduleAPI.serialize(responseBody, params));
+              return resolve(ScheduleAPI.serialize(responseBody, params));
+            })
+            .catch(err => reject(new CustomError("NUWM API is dead:(", 400)));
         }
       );
     })
