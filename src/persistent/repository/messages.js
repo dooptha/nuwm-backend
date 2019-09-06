@@ -9,8 +9,9 @@ function getAll() {
   return Message.find({}).exec();
 }
 
-function remove(id) {
-  return Message.deleteOne({id}).exec()
+// When you are using capped collections in mongodb you can't update/remove documents
+function removeAll() {
+  return Message.collection.drop();
 }
 
-module.exports = {save, getAll, remove};
+module.exports = {save, getAll, removeAll};

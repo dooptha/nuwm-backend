@@ -48,8 +48,8 @@ class MessagesHistory extends EventEmitter {
     return messages.getAll();
   }
 
-  static remove(id) {
-    return messages.remove(id);
+  static removeAll() {
+    return messages.removeAll();
   }
 }
 
