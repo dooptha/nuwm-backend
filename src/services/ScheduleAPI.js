@@ -62,7 +62,8 @@ class ScheduleAPI {
     this.API_ENDPINT = config.SCHEDULE_API_ENDPOINT;
     this.GET_REQUEST_OPTIONS = {
       encoding: null,
-      method: "GET"
+      method: "GET",
+      timeout: 10000
     }
   }
 
@@ -70,7 +71,9 @@ class ScheduleAPI {
     return new Promise((resolve, reject) => {
       return request(
         `${this.API_ENDPINT}?${queryString.stringify(params)}`,
+        {timeout: 10000},
         function (error, response, body) {
+          if (error.code === 'ETIMEDOUT') return reject(new CustomError("NUWM API sleeps", 400));
           if (error) return reject(new CustomError(error, 400));
           // Another promise to cover JSON.parse async error throw
           return Promise.resolve(body)
@@ -98,6 +101,7 @@ class ScheduleAPI {
       const GROUPS_LINK = "http://desk.nuwm.edu.ua/cgi-bin/timetable.cgi?n=701&lev=142";
       return request(GROUPS_LINK, this.GET_REQUEST_OPTIONS,
         function (error, response, body) {
+          if (error.code === 'ETIMEDOUT') return reject(new CustomError("NUWM API sleeps", 400));
           if (error) return reject(new CustomError(error, 400));
           const responseBody = JSON.parse(iconv.decode(body, "windows-1251"));
           if (responseBody.code === 33 || response.error)
@@ -115,6 +119,7 @@ class ScheduleAPI {
       const LECTURERS_LINK = "http://desk.nuwm.edu.ua/cgi-bin/timetable.cgi?n=701&lev=141&faculty=0";
       return request(LECTURERS_LINK, this.GET_REQUEST_OPTIONS,
         function (error, response, body) {
+          if (error.code === 'ETIMEDOUT') return reject(new CustomError("NUWM API sleeps", 400));
           if (error) return reject(new CustomError(error, 400));
           const responseBody = JSON.parse(iconv.decode(body, "windows-1251"));
           if (responseBody.code === 33 || response.error)
