@@ -57,14 +57,17 @@ const mockData = {
     }]
 };
 
+const config = require('../../config');
+const API_ENDPOINT = process.env.SCHEDULE_API_ENDPOINT || config.SCHEDULE_API_ENDPOINT;
+
 class ScheduleAPI {
-  constructor(config) {
-    this.API_ENDPINT = config.SCHEDULE_API_ENDPOINT;
+  constructor() {
+    this.API_ENDPINT = API_ENDPOINT;
     this.GET_REQUEST_OPTIONS = {
       encoding: null,
       method: "GET",
       timeout: 10000
-    }
+    };
   }
 
   getScheduleByParams(params) {
