@@ -62,7 +62,6 @@ const API_ENDPOINT = process.env.SCHEDULE_API_ENDPOINT || config.SCHEDULE_API_EN
 
 class ScheduleAPI {
   constructor() {
-    this.API_ENDPINT = API_ENDPOINT;
     this.GET_REQUEST_OPTIONS = {
       encoding: null,
       method: "GET",
@@ -73,10 +72,10 @@ class ScheduleAPI {
   getScheduleByParams(params) {
     return new Promise((resolve, reject) => {
       return request(
-        `${this.API_ENDPINT}?${queryString.stringify(params)}`,
+        `${API_ENDPOINT}?${queryString.stringify(params)}`,
         {timeout: 10000},
         function (error, response, body) {
-          if (error.code === 'ETIMEDOUT') return reject(new CustomError("NUWM API sleeps", 400));
+          if (error && error.code === 'ETIMEDOUT') return reject(new CustomError("NUWM API sleeps", 400));
           if (error) return reject(new CustomError(error, 400));
           // Another promise to cover JSON.parse async error throw
           return Promise.resolve(body)
