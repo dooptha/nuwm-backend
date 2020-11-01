@@ -1,24 +1,24 @@
-const router = require("express").Router();
-const users = require("../persistent/repository/users");
-const AuthHandler = require("../services/AuthHandler");
-const {version} = require('../../package.json');
+const router = require('express').Router()
+const users = require('../persistent/repository/users')
+const AuthHandler = require('../services/AuthHandler')
+const {version} = require('../../package.json')
 
 const indexRoute = function () {
-  router.get("/", function (req, res) {
+  router.get('/', function (req, res) {
     return res.send(
       `<h1 style="margin-top: 150px; width: 100%; text-align: center;">
           <a href="https://dooptha.com">Dooptha</a> NUWM API v${version}
-       </h1>`);
-  });
+       </h1>`)
+  })
 
-  router.get("/ping", function (req, res) {
-    return res.send("pong");
-  });
+  router.get('/ping', function (req, res) {
+    return res.send('pong')
+  })
 
-  router.post("/login", function (req, res) {
-    const {username, deviceId} = req.body;
+  router.post('/login', function (req, res) {
+    const {username, deviceId} = req.body
     if (!username || !deviceId)
-      return res.status(400).send({error: "Not enough data"});
+      return res.status(400).send({error: 'Not enough data'})
 
     return users.findByDeviceId(deviceId)
       .then(user => user === null ? users.create(username, deviceId) : user)
@@ -26,14 +26,14 @@ const indexRoute = function () {
         .then(token => ({user, token}))
       )
       .then(response => {
-        response.user['__v'] = undefined;
-        response.user.deviceId = undefined;
-        return res.send(response);
+        response.user['__v'] = undefined
+        response.user.deviceId = undefined
+        return res.send(response)
       })
-      .catch(err => res.status(500).send({error: err.message}));
-  });
+      .catch(err => res.status(500).send({error: err.message}))
+  })
 
-  return router;
-};
+  return router
+}
 
-module.exports = indexRoute;
+module.exports = indexRoute

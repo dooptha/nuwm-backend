@@ -1,7 +1,7 @@
-const mongoose = require("../index");
+const mongoose = require('../index')
 
-const MESSAGES_COUNT = 50;
-const COLLECTION_SIZE = 1024 * 1024;
+const MESSAGES_COUNT = 50
+const COLLECTION_SIZE = 1024 * 1024
 
 const messageSchema = new mongoose.Schema({
   id: String,
@@ -11,8 +11,8 @@ const messageSchema = new mongoose.Schema({
   },
   body: String,
   date: Date
-},  { capped: { size: COLLECTION_SIZE, max: MESSAGES_COUNT } });
+},  { capped: { size: COLLECTION_SIZE, max: MESSAGES_COUNT } })
 
-const Message = mongoose.model('Message', messageSchema);
+const Message = mongoose.model('Message', messageSchema)
 
-module.exports = Message;
+module.exports = Message

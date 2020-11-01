@@ -1,34 +1,34 @@
-const Poll = require('../entites/Poll');
+const Poll = require('../entites/Poll')
 
 function create(question, options) {
   const poll = new Poll({
     question,
     options
-  });
+  })
   return closeLastPoll()
     .then(() => poll.save())
-    .then(poll => poll);
+    .then(poll => poll)
 }
 
 function getActivePoll(deviceId) {
   return Poll.aggregate([
-      {$match: {active: true, closedAt: null}},
-      {
-        $addFields: {
-          "voted": {
-            $in: [deviceId, {
-              $reduce: {
-                input: "$options.voters",
-                initialValue: [],
-                in: {$concatArrays: ["$$value", "$$this"]}
-              }
-            }]
-          },
-        }
+    {$match: {active: true, closedAt: null}},
+    {
+      $addFields: {
+        'voted': {
+          $in: [deviceId, {
+            $reduce: {
+              input: '$options.voters',
+              initialValue: [],
+              in: {$concatArrays: ['$$value', '$$this']}
+            }
+          }]
+        },
       }
-    ]
+    }
+  ]
   )
-    .exec();
+    .exec()
 }
 
 function closeLastPoll() {
@@ -42,21 +42,21 @@ function closeLastPoll() {
 }
 
 function findById(id) {
-  return Poll.findOne({id}).exec();
+  return Poll.findOne({id}).exec()
 }
 
 function update(id, data) {
-  return Poll.findOneAndUpdate({id}, data, {new: true}).exec();
+  return Poll.findOneAndUpdate({id}, data, {new: true}).exec()
 }
 
 function getClosedPolls(page, offset = 10) {
-  return Poll.find({active: false}).limit(offset).skip(page * offset).exec();
+  return Poll.find({active: false}).limit(offset).skip(page * offset).exec()
 }
 
 function vote(optionId, deviceId) {
   return Poll.findOneAndUpdate({
-    "options.id": optionId,
-    "options.voters": {$ne: deviceId}
+    'options.id': optionId,
+    'options.voters': {$ne: deviceId}
   }, {
     $push: {
       'options.$.voters': deviceId
@@ -68,7 +68,7 @@ function vote(optionId, deviceId) {
   }, {
     new: true
   })
-    .exec();
+    .exec()
 }
 
 module.exports = {
@@ -79,4 +79,4 @@ module.exports = {
   update,
   vote,
   getActivePoll
-};
+}

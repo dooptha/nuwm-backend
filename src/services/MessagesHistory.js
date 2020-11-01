@@ -1,5 +1,5 @@
-const messages = require('../persistent/repository/messages');
-const EventEmitter = require('events');
+const messages = require('../persistent/repository/messages')
+const EventEmitter = require('events')
 
 /**
  * Simple implementation of event based in-memory query
@@ -11,46 +11,46 @@ const EventEmitter = require('events');
  */
 class MessagesHistory extends EventEmitter {
   constructor() {
-    super();
-    this.query = [];
+    super()
+    this.query = []
 
-    this.setupEvents();
+    this.setupEvents()
   }
 
   setupEvents() {
-    this.on('save', (message) => this.queried(MessagesHistory.saveMessage.bind(this, message)));
+    this.on('save', (message) => this.queried(MessagesHistory.saveMessage.bind(this, message)))
   }
 
   queried(callback) {
-    this.query.push(callback);
+    this.query.push(callback)
     if (this.query.length === 1) {
-      this.next();
+      this.next()
     }
   }
 
   next() {
     if (this.query[0])
       this.query[0].call(this, () => {
-        this.query.shift();
-        this.next.call(this);
+        this.query.shift()
+        this.next.call(this)
       })
         .then(() => {
-          this.query.shift();
-          this.next.call(this);
-        });
+          this.query.shift()
+          this.next.call(this)
+        })
   }
 
   static saveMessage(message) {
-    return messages.save(message);
+    return messages.save(message)
   }
 
   static getLastMessages() {
-    return messages.getAll();
+    return messages.getAll()
   }
 
   static removeAll() {
-    return messages.removeAll();
+    return messages.removeAll()
   }
 }
 
-module.exports = MessagesHistory;
+module.exports = MessagesHistory
