@@ -4,7 +4,6 @@ const MessagesHistory = require('../services/MessagesHistory')
 const adminRoute = function (io) {
 
   router.post('/messages/delete', function (req, res) {
-    const {message} = req.body
     return MessagesHistory.removeAll()
       .then(() => io.of('/flood').emit('messages:removed'))
       .then(() => res.status(200).end())

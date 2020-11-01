@@ -88,7 +88,7 @@ class ScheduleAPI {
 
               return resolve(ScheduleAPI.serialize(responseBody, params))
             })
-            .catch(err => reject(new CustomError('NUWM API is dead:(', 400)))
+            .catch(() => reject(new CustomError('NUWM API is dead:(', 400)))
         }
       )
     })

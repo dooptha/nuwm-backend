@@ -41,7 +41,7 @@ app.use('/polls', polls)
 app.use(AuthHandler.secureRoutes(AuthHandler.ROLES.ADMIN))
 app.use('/admin', admin)
 
-app.use(function(err, req, res, next) {
+app.use((err, req, res) => {
   console.error(err.stack)
   return res.status(500).send({error: `Internal Error: ${err.message}`})
 })

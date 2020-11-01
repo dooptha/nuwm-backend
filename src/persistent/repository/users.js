@@ -9,7 +9,7 @@ function create(username, deviceId) {
 }
 
 function findByDeviceId(deviceId) {
-  const options = {_id: 0, deviceId: 0}
+  // const options = {_id: 0, deviceId: 0}
   return User.findOne({deviceId}).exec()
 }
 
