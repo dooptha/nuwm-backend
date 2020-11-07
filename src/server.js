@@ -11,6 +11,7 @@ const AuthHandler = require('./services/AuthHandler')
 const app = express()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
+const { start } = require('./services/bot')
 
 const config = require('../config')
 
@@ -27,6 +28,8 @@ app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(helmet())
 app.use(cors())
+
+start()
 
 const sockets = require('./socket')(io)
 const index = require('./routes')()
