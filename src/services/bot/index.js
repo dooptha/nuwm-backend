@@ -4,6 +4,7 @@ const session = require('telegraf/session')
 const Stage = require('telegraf/stage')
 const Markup = require('telegraf/markup')
 const WizardScene = require('telegraf/scenes/wizard')
+const _get = require('lodash/get')
 
 const BOT_API_TOKEN = process.env.TELEGRAM_BOT_API_TOKEN
 
@@ -12,8 +13,33 @@ const MAX_MESSAGES = 3
 
 const FEED_CHAT_ID = parseInt(process.env.FEED_CHAT_ID)
 
+const caption = (message, isAnon) => {
+  const name = isAnon ? 'Анонімно' : (
+    `@${_get(message, 'from.username')}` ||
+    `${_get(message, 'from.first_name')} ${_get(message, 'from.last_name')}`
+  )
+
+  return `Надіслано: ${name}`
+}
+
+const appendCaption = (text, message, isAnon) => {
+  return [text, caption(message, isAnon)].join('\n\n')
+}
+
+const sendMessage = (ctx, userMessage, isAnon = false) => {
+  console.log('user', userMessage)
+
+  const containsText = !!userMessage.text
+
+  if (containsText) {
+    return ctx.reply(appendCaption(userMessage.text, userMessage, isAnon))
+  }
+
+  return ctx.reply(userMessage)
+}
+
 const creationScene = () => {
-  const inlineMessageRatingKeyboard = Markup.inlineKeyboard([
+  const inlineMessageKeyboard = Markup.inlineKeyboard([
     Markup.callbackButton('✅', 'send'),
     Markup.callbackButton('⛔️', 'cancel')
   ]).extra()
@@ -24,20 +50,24 @@ const creationScene = () => {
       ctx.reply('Надішліть повідомлення яке ви хочете поширити:')
       return ctx.wizard.next()
     },
-    async ({session, message, reply, wizard, telegram, from}) => {
+    async (ctx) => {
+      const {session, message, reply, wizard, telegram, from} = ctx
+
       await reply('Ваше повідомлення виглядатиме так:')
+
+      const sentMessage = await sendMessage(ctx, message)
+
+      console.log('bot', sentMessage)
+
       session.messageId = message.message_id
 
-      await reply(message)
-
-      await telegram.sendMessage(from.id, 'Все правильно?', inlineMessageRatingKeyboard)
+      await telegram.sendMessage(from.id, 'Все правильно?', inlineMessageKeyboard)
 
       return wizard.next()
     },
     async (ctx) => {
       if (ctx.updateType === 'callback_query') {
-        console.log(ctx.update.callback_query)
-        const action = ctx.update.callback_query.data
+        const action = _get(ctx, 'update.callback_query.data')
 
         if (action === 'send') return ctx.wizard.next()
       }
