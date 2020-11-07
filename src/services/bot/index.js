@@ -23,19 +23,28 @@ const caption = (message, isAnon) => {
 }
 
 const appendCaption = (text, message, isAnon) => {
+  if (!text) return caption(message, isAnon)
+
   return [text, caption(message, isAnon)].join('\n\n')
 }
 
-const sendMessage = (ctx, userMessage, isAnon = false) => {
-  console.log('user', userMessage)
-
-  const containsText = !!userMessage.text
+const sendMessage = (ctx, message, isAnon = false) => {
+  const containsText = !!message.text
+  const containsPhoto = !!message.photo
 
   if (containsText) {
-    return ctx.reply(appendCaption(userMessage.text, userMessage, isAnon))
+    return ctx.reply(appendCaption(message.text, message, isAnon))
   }
 
-  return ctx.reply(userMessage)
+  if (containsPhoto) {
+    const fileId = _get(message, 'photo[0].file_id')
+
+    return ctx.replyWithPhoto(fileId, {
+      caption: appendCaption(message.caption, message)
+    })
+  }
+
+  return ctx.reply(message)
 }
 
 const creationScene = () => {
