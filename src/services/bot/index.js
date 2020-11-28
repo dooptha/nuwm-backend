@@ -28,12 +28,25 @@ const appendCaption = (text, message, isAnon) => {
   return [text, caption(message, isAnon)].join('\n\n')
 }
 
+// Disabled for now
+// #issue Images in media group are sent as separated events
+const sendMediaGroup = async (ctx, message) => {
+  console.log('message', message)
+  const media = _get(message, 'photo', []).map(photo => ({
+    type: 'photo',
+    media: photo.file_id
+  }))
+
+  return ctx.replyWithMediaGroup(media)
+}
+
 const sendMessage = (ctx, message, isAnon = false) => {
   const containsText = !!message.text
   const containsPhoto = !!message.photo
+  const containsMediaGroup = !!message.media_group_id
 
-  if (containsText) {
-    return ctx.reply(appendCaption(message.text, message, isAnon))
+  if (containsMediaGroup) {
+    return sendMediaGroup(ctx, message)
   }
 
   if (containsPhoto) {
@@ -44,31 +57,51 @@ const sendMessage = (ctx, message, isAnon = false) => {
     })
   }
 
-  return ctx.reply(message)
+  if (containsText) {
+    return ctx.reply(appendCaption(message.text, message, isAnon))
+  }
+
+  // Forwarding message sent by user
+  return ctx.telegram.sendCopy(ctx.chat.id, message)
 }
 
 const creationScene = () => {
   const inlineMessageKeyboard = Markup.inlineKeyboard([
-    Markup.callbackButton('✅', 'send'),
-    Markup.callbackButton('⛔️', 'cancel')
+    Markup.callbackButton('✅ Так', 'send'),
+    Markup.callbackButton('⛔️ Ні', 'cancel')
   ]).extra()
 
-  return  new WizardScene(
+  return new WizardScene(
     'create-post',
     (ctx) => {
-      ctx.reply('Надішліть повідомлення яке ви хочете поширити:')
+      ctx.reply('Надішліть повідомлення яке ви бажаєте поширити:')
       return ctx.wizard.next()
     },
     async (ctx) => {
       const {session, message, reply, wizard, telegram, from} = ctx
 
+      // #case repetitive message group item
+      // #dk Media Groups are sent as few events to the bot
+      //   - we should ignore other events expect first one
+      if (message.media_group_id && session.mediaGroupId) {
+        return ctx.scene.leave()
+      }
+      if (message.media_group_id) {
+        session.mediaGroupId = message.media_group_id
+        await reply('Надсилання декількох зображень поки недоступне, вибачте за незручності 🙁')
+        return ctx.scene.leave()
+      }
+
       await reply('Ваше повідомлення виглядатиме так:')
 
-      const sentMessage = await sendMessage(ctx, message)
+      try {
+        const sentMessage = await sendMessage(ctx, message)
+        session.messageId = sentMessage.message_id
+      } catch (error) {
+        console.error(error)
 
-      console.log('bot', sentMessage)
-
-      session.messageId = message.message_id
+        return ctx.reply('Упс! Щось пішло не так 🤷‍♂️')
+      }
 
       await telegram.sendMessage(from.id, 'Все правильно?', inlineMessageKeyboard)
 
@@ -82,7 +115,10 @@ const creationScene = () => {
       }
 
       await ctx.reply('Надсилання відмінено!')
+
       ctx.session.messageId = null
+      ctx.session.mediaGroupId = null
+
       return ctx.scene.leave()
     },
     async (ctx) => {
@@ -97,12 +133,17 @@ const creationScene = () => {
       await ctx.telegram.forwardMessage(FEED_CHAT_ID, ctx.chat.id, messageId)
       await ctx.reply('Повідомлення надіслано успішно!')
 
+      ctx.session.mediaGroupId = null
+      ctx.session.messageId = null
+
       return ctx.scene.leave()
     }
   )
 }
 
 const start = async () => {
+  if (!BOT_API_TOKEN) return console.log('BOT_API_TOKEN is absent, bot was not started')
+
   const bot = new Telegraf(BOT_API_TOKEN)
 
   const createPost = creationScene()
@@ -127,6 +168,8 @@ const start = async () => {
   })
   
   await bot.launch()
+
+  console.log('NUWM FEED bot is started')
 
   return bot
 }
