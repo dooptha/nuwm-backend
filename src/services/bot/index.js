@@ -40,6 +40,13 @@ const sendMediaGroup = async (ctx, message) => {
   return ctx.replyWithMediaGroup(media)
 }
 
+const notSupportedMessageFormat = (ctx) => {
+  // Just copy message sent by user
+  // return ctx.telegram.sendCopy(ctx.chat.id, message)
+
+  return ctx.reply('Наразі ми не підтримуємо повідомлення такого формату, вибачте за незручності 🙁')
+}
+
 const sendMessage = (ctx, message, isAnon = false) => {
   const containsText = !!message.text
   const containsPhoto = !!message.photo
@@ -61,8 +68,7 @@ const sendMessage = (ctx, message, isAnon = false) => {
     return ctx.reply(appendCaption(message.text, message, isAnon))
   }
 
-  // Forwarding message sent by user
-  return ctx.telegram.sendCopy(ctx.chat.id, message)
+  return notSupportedMessageFormat()
 }
 
 const creationScene = () => {
