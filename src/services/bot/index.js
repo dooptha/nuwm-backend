@@ -60,7 +60,9 @@ const getPictureUrl = (fileId) => {
         console.log(error)
         return reject(error)
       }
-      const image = _get(body, 'result')
+
+      const data = JSON.parse(body)
+      const image = _get(data, 'result')
 
       if (!image) return resolve(null)
 
@@ -93,6 +95,7 @@ const saveMessageToDatabase = async (message) => {
   // Building sharing link
   const sharingUrl = `https://t.me/nuwee_feed/${messageId}`
 
+  // Fetching image url
   if (containsImage) {
     const fileId = await findOriginalImage(message.photo)
     const pictureUrl = await getPictureUrl(fileId)
@@ -101,8 +104,6 @@ const saveMessageToDatabase = async (message) => {
   }
 
   data = {...data, messageId, text, sharingUrl, sendDate}
-
-  console.log('data', data)
 
   return events.save(data)
 }
