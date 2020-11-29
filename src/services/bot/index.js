@@ -5,6 +5,8 @@ const Stage = require('telegraf/stage')
 const Markup = require('telegraf/markup')
 const WizardScene = require('telegraf/scenes/wizard')
 const _get = require('lodash/get')
+const request = require('request')
+const events = require('../../persistent/repository/events')
 
 const BOT_API_TOKEN = process.env.TELEGRAM_BOT_API_TOKEN
 
@@ -12,6 +14,8 @@ const HOUR_IN_MILLISECONDS = 60 * 60 * 1000
 const MAX_MESSAGES = 3
 
 const FEED_CHAT_ID = parseInt(process.env.FEED_CHAT_ID)
+
+const unhandledErrorMessage = 'Упс! Щось пішло не так 🤷‍♂️'
 
 const caption = (message, isAnon) => {
   const name = isAnon ? 'Анонімно' : (
@@ -45,6 +49,62 @@ const notSupportedMessageFormat = (ctx) => {
   // return ctx.telegram.sendCopy(ctx.chat.id, message)
 
   return ctx.reply('Наразі ми не підтримуємо повідомлення такого формату, вибачте за незручності 🙁')
+}
+
+const getPictureUrl = (fileId) => {
+  const url = `https://api.telegram.org/bot${BOT_API_TOKEN}/getFile?file_id=${fileId}`
+
+  return new Promise((resolve, reject) => {
+    request(url, (error, {body}) => {
+      if (error) {
+        console.log(error)
+        return reject(error)
+      }
+      const image = _get(body, 'result')
+
+      if (!image) return resolve(null)
+
+      const fileUrl = buildImageUrl(image)
+
+      return resolve(fileUrl)
+    })
+  })
+}
+
+const buildImageUrl = (image) => {
+  const filePath = _get(image, 'file_path')
+  return `https://api.telegram.org/file/bot${BOT_API_TOKEN}/${filePath}`
+}
+
+const findOriginalImage = async (images = []) => {
+  const lastEntry = images.pop()
+  return _get(lastEntry, 'file_id')
+}
+
+const saveMessageToDatabase = async (message) => {
+  let data = {}
+
+  const containsImage = !!_get(message, 'photo[0].file_id')
+
+  const sendDate = message.date
+  const messageId = message.message_id
+  const text = message.text || message.caption
+
+  // Building sharing link
+  const sharingUrl = `https://t.me/nuwee_feed/${messageId}`
+
+  if (containsImage) {
+    const fileId = await findOriginalImage(message.photo)
+    const pictureUrl = await getPictureUrl(fileId)
+
+    data = { pictureUrl}
+  }
+
+  data = {...data, messageId, text, sharingUrl, sendDate}
+
+  console.log('data', data)
+
+  return events.save(data)
 }
 
 const sendMessage = (ctx, message, isAnon = false) => {
@@ -106,7 +166,7 @@ const creationScene = () => {
       } catch (error) {
         console.error(error)
 
-        return ctx.reply('Упс! Щось пішло не так 🤷‍♂️')
+        return ctx.reply(unhandledErrorMessage)
       }
 
       await telegram.sendMessage(from.id, 'Все правильно?', inlineMessageKeyboard)
@@ -131,13 +191,18 @@ const creationScene = () => {
       const messageId = ctx.session.messageId
 
       if (!messageId) {
-        ctx.reply('Упс! Щось пішло не так 🤷‍♂️')
+        ctx.reply(unhandledErrorMessage)
 
         return ctx.scene.leave()
       }
 
-      await ctx.telegram.forwardMessage(FEED_CHAT_ID, ctx.chat.id, messageId)
+      const message = await ctx.telegram.forwardMessage(FEED_CHAT_ID, ctx.chat.id, messageId)
+
       await ctx.reply('Повідомлення надіслано успішно!')
+
+      const results = await saveMessageToDatabase(message)
+
+      console.log(results)
 
       ctx.session.mediaGroupId = null
       ctx.session.messageId = null
