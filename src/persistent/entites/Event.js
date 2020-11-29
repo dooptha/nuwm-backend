@@ -5,6 +5,7 @@ const eventSchema = new mongoose.Schema({
   text: String,
   postUrl: String,
   messageId: String,
+  sharingUrl: String,
   createdAt: {type: Date, default: () => Date.now()}
 })
 
