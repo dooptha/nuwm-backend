@@ -178,7 +178,12 @@ const creationScene = () => {
       if (ctx.updateType === 'callback_query') {
         const action = _get(ctx, 'update.callback_query.data')
 
-        if (action === 'send') return ctx.wizard.next()
+        if (action === 'send')  {
+          // #dk `next` without input doesn't work
+          // - https://github.com/telegraf/telegraf/issues/949
+          ctx.wizard.next()
+          return ctx.wizard.steps[ctx.wizard.cursor](ctx)
+        }
       }
 
       await ctx.reply('Надсилання відмінено!')
